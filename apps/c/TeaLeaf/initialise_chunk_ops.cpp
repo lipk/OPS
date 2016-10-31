@@ -125,7 +125,7 @@ void initialise_chunk() {
   ops_par_loop_initialise_chunk_kernel_zero(
       "initialise_chunk_kernel_zero", tea_grid, 2, range,
       ops_arg_dat(tri_bfp, 1, S2D_00, "double", OPS_WRITE));
-
+  
   int rangefull1[] = {-2, x_cells + 2, -2, y_cells + 2};
   ops_par_loop_initialise_chunk_kernel_zero(
       "initialise_chunk_kernel_zero", tea_grid, 2, rangefull1,
@@ -138,6 +138,7 @@ void initialise_chunk() {
   ops_par_loop_initialise_chunk_kernel_zero(
       "initialise_chunk_kernel_zero", tea_grid, 2, rangefull3,
       ops_arg_dat(yarea, 1, S2D_00, "double", OPS_WRITE));
+
 
   int rangex[] = {x_min - 2, x_max + 2, y_min - 2, y_max + 2};
   ops_par_loop_initialise_chunk_kernel_zero_x(
@@ -170,7 +171,9 @@ void initialise_chunk() {
       ops_arg_dat(vertexdy, 1, S2D_00_STRID2D_Y, "double", OPS_WRITE));
 
   int rangefull[] = {x_min - 2, x_max + 3, y_min - 2, y_max + 3};
-
+  ops_execute(); //The following 4 loops slightly break the 
+                 //abstraction to initialise edge datasets
+                 //tiling dependency analysis does not like that
   ops_par_loop_initialise_chunk_kernel_xx(
       "initialise_chunk_kernel_xx", tea_grid, 2, rangefull,
       ops_arg_dat(xx, 1, S2D_00_STRID2D_X, "int", OPS_WRITE), ops_arg_idx());
@@ -190,7 +193,7 @@ void initialise_chunk() {
       ops_arg_dat(vertexy, 1, S2D_00_STRID2D_Y, "double", OPS_WRITE),
       ops_arg_dat(yy, 1, S2D_00_STRID2D_Y, "int", OPS_READ),
       ops_arg_dat(vertexdy, 1, S2D_00_STRID2D_Y, "double", OPS_WRITE));
-
+  
   rangex[0] = x_min - 2;
   rangex[1] = x_max + 2;
   rangex[2] = y_min - 2;
